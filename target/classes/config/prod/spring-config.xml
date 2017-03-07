@@ -1,0 +1,104 @@
+<beans xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/mvc 
+    http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+    <mvc:annotation-driven /> 
+
+<context:component-scan base-package="com.ca.digital.service" />
+<context:component-scan base-package="com.ca.digital.service.impl" />
+<context:component-scan base-package="com.ca.digital.dao" />
+<context:component-scan base-package="com.ca.digital.manager" />
+<context:component-scan base-package="com.ca.digital.manager.impl" />
+<context:component-scan base-package="com.ca.digital.utility" />
+<context:component-scan base-package="com.ca.digital.orchestrator" />
+<!-- PROD CONFIG <context:component-scan base-package="com.ca.digital.*" /> -->
+<tx:annotation-driven transaction-manager="transactionManager"/>
+
+<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+	
+   <property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
+   <property name="url" value="jdbc:sqlserver://AGAHA01-I163630\\DASHBOARD:1433;database=DataDrivenTrials" />
+   <property name="username" value="DB_Creator" />
+   <property name="password" value="Dashboard@2016" />
+</bean>
+
+<bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+   <property name="sessionFactory" ref="sessionFactory" />
+</bean>
+<!-- <bean id="hibernateProperties"
+    class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+ 
+    <property name="location" value="classpath:config/hibernate.properties" />
+ 
+    <property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_NEVER" />
+ 
+</bean> -->
+<!-- <bean id="domainCheckServiceInterface" class="com.ca.digital.service.impl.DomainCheckService"></bean>
+<bean name="/domainCheck.http" class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter">
+   <property name="service" ref="domainCheckService" />
+   <property name="serviceInterface"  value="com.ca.digital.service.ServiceAction" />
+</bean>
+<bean id="domainCheckService" class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter">
+   <property name="service" ref="trailOrchestrator" />
+   <property name="serviceInterface" value="com.ca.digital.orchestrator.TrailOrchestrator" />
+</bean>	
+<bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+<property name="mappings">
+		<props>
+            <prop key="/trailId">trailOrchestrator</prop>
+            <prop key="/dcCheck">/domainCheck.http</prop>
+        </props>
+</property>
+</bean> -->
+<!-- <bean id="domainCheckService"   
+class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean">  
+    <property name="serviceUrl"   
+         value="http://localhost:8888/httpinvoker/domainCheck.http"></property>  
+    <property name="serviceInterface" value="com.ca.digital.orchestrator.ServiceAction"></property>  
+</bean>  -->
+
+<bean id="TrailOrchestrator"   
+class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter" lazy-init="true">  
+    <property name="service" ref="trailOrchestrator"></property>  
+    <property name="serviceInterface" value="com.ca.digital.orchestrator.ServiceExecutor"></property>  
+</bean>
+<bean id="DomainCheckService"   
+class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter" lazy-init="true">  
+    <property name="service" ref="domainCheckService"></property>  
+    <property name="serviceInterface" value="com.ca.digital.service.ServiceAction"></property>  
+</bean>
+<bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping" lazy-init="true">
+<property name="mappings">
+		<props>
+            <prop key="domainCheck">DomainCheckService</prop>
+            <prop key="processTrail">TrailOrchestrator</prop>
+        </props>
+</property>
+</bean>
+
+
+
+<beans profile="prod">
+<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+   <property name="dataSource" ref="dataSource" />
+   <property name="configLocation" value="classpath:config/prod/hibernate.cfg.xml" />
+   <property name="packagesToScan" value="com.ca.digital.entity"/>
+   
+</bean>
+
+</beans>
+</beans>
+ 
