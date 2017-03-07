@@ -181,7 +181,7 @@
                          tofile="${project.build.outputDirectory}/config/hibernate.properties"/>
                    
                  </tasks>
-       		
+				<outputDirectory>target-dev</outputDirectory> 
                </configuration>
              </execution>
            </executions>
@@ -201,6 +201,7 @@
              <include>**/spring-config.xml</include>
           </includes>
                  <classifier>dev</classifier>
+				 <outputDirectory>target-dev</outputDirectory>
                </configuration>
              </execution>
            </executions>
@@ -244,7 +245,7 @@
                          tofile="${project.build.outputDirectory}/config/hibernate.properties"/>
                    
                  </tasks> -->
-       		
+					<outputDirectory>target-devservices</outputDirectory>
                </configuration>
              </execution>
            </executions>
@@ -265,6 +266,7 @@
              <include>**/*.jsp</include>
           </includes>
                  <classifier>devservices</classifier>
+				 <outputDirectory>target-devservices</outputDirectory>
                </configuration>
              </execution>
            </executions>
@@ -312,7 +314,7 @@
                          tofile="${project.build.outputDirectory}/config/hibernate.properties"/>
                    
                  </tasks>
-       		
+				<outputDirectory>target-prod</outputDirectory>
                </configuration>
              </execution>
            </executions>
@@ -332,6 +334,7 @@
              <include>**/spring-config.xml</include>
           </includes>
                  <classifier>prod</classifier>
+				 <outputDirectory>target-prod</outputDirectory>
                </configuration>
              </execution>
            </executions>
